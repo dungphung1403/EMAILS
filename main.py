@@ -3,7 +3,6 @@ import json
 import os
 import streamlit as st
 from azure.communication.email import EmailClient
-from db import insert_email
 from email_content import summarize_transcript, create_html_email_from_json
 from dotenv import load_dotenv
 
@@ -25,10 +24,9 @@ if st.button("🧠 Generate Reply"):
         st.error("Enter a customer query first.")
     else:
         with st.spinner("Generating…"):
-            summary = summarize_transcript(query)
+            transcript_text = query.read().decode("utf-8")
+            summary = summarize_transcript(transcript_text)
             summary_dict = json.loads(summary)
-            print(summary_dict)
-            print(query)
             st.session_state["draft"] = create_html_email_from_json(summary_dict)
             # st.session_state["draft"] = summary
 
